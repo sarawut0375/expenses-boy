@@ -9,10 +9,10 @@
      ⚙️  แก้ไขค่าด้านล่างนี้ให้ตรงกับข้อมูลของคุณ
      ==================================================== -->
 <script>
-  const SHEET_ID  = '1Uyacg16hMtWdf7xKn1xcs9vzWYX_1YgTBYP5qWGa8HU';   // ← ใส่ ID ของ Sheet
+  const SHEET_ID  = '1NYW07QLxzJ_sP9jN0KdchMIrIYAof8MHIgIfh-I0hRA';   // ← ใส่ ID ของ Sheet
   const API_KEY = 'AIzaSyB1fILVRiJv3OzyFHVEQJUzU4AqOQsdIz8';
-  const RANGE     = 'Sheet1!A:E';      // ช่วงข้อมูล: A=วันที่, B=รายการ, C=หมวดหมู่, D=รายรับ, E=รายจ่าย
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjyi4WI5UW9y7jgGMrktrcI9n4T1loquu3rBKb9awoyXsuDXqi1Oeyy-S53mPN2JjK/exec'; // ← ใส่ URL จาก Deploy
+  const RANGE      = 'Sheet1!A:F';   // ← A=ID, B=วันที่, C=รายการ, D=หมวดหมู่, E=รายรับ, F=รายจ่าย
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM3tis-rVyAHebu3y--7ux-jkdAcJRnXdHo0wtVwNk5Y9psx2QNURvg3G4eX_X_STvvQ/exec';
 </script>
 <!-- ==================================================== -->
 
@@ -20,70 +20,40 @@
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:      #f5f4f0;
-  --surface: #ffffff;
-  --surf2:   #eeecea;
-  --border:  rgba(0,0,0,0.09);
-  --border2: rgba(0,0,0,0.16);
-  --text:    #1a1a18;
-  --text2:   #6b6a66;
-  --text3:   #999891;
-  --r-md:    6px;
-  --r-lg:    10px;
-  --green:   #1D9E75;
-  --green-bg:#E1F5EE;
-  --green-dk:#0F6E56;
-  --red:     #D85A30;
-  --red-bg:  #FAECE7;
-  --red-dk:  #993C1D;
+  --bg:      #f5f4f0; --surface: #ffffff; --surf2: #eeecea;
+  --border:  rgba(0,0,0,0.09); --border2: rgba(0,0,0,0.16);
+  --text:    #1a1a18; --text2: #6b6a66; --text3: #999891;
+  --r-md: 6px; --r-lg: 10px;
+  --green: #1D9E75; --green-bg: #E1F5EE; --green-dk: #0F6E56;
+  --red:   #D85A30; --red-bg:   #FAECE7; --red-dk:   #993C1D;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:      #1a1a18;
-    --surface: #222220;
-    --surf2:   #2a2a28;
-    --border:  rgba(255,255,255,0.09);
-    --border2: rgba(255,255,255,0.16);
-    --text:    #eeebe4;
-    --text2:   #b0aea8;
-    --text3:   #777570;
-    --green-bg:#04342C;
-    --green-dk:#9FE1CB;
-    --red-bg:  #4A1B0C;
-    --red-dk:  #F5C4B3;
+    --bg: #1a1a18; --surface: #222220; --surf2: #2a2a28;
+    --border: rgba(255,255,255,0.09); --border2: rgba(255,255,255,0.16);
+    --text: #eeebe4; --text2: #b0aea8; --text3: #777570;
+    --green-bg:#04342C; --green-dk:#9FE1CB;
+    --red-bg:  #4A1B0C; --red-dk:  #F5C4B3;
   }
 }
+body { background:var(--bg); font-family:-apple-system,'Noto Sans Thai',sans-serif; font-size:13px; color:var(--text); padding:16px 14px 40px; }
+.wrap { max-width:940px; margin:0 auto; }
 
-body {
-  background: var(--bg);
-  font-family: -apple-system, 'Noto Sans Thai', sans-serif;
-  font-size: 13px;
-  color: var(--text);
-  padding: 16px 14px 40px;
-}
-.wrap { max-width: 940px; margin: 0 auto; }
-
-/* ── Header ── */
+/* Header */
 .hdr { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
 .hdr h1 { font-size:17px; font-weight:500; }
-.hdr-r  { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.hdr-r { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 
-/* ── Pill button base ── */
-.pill {
-  font-size:11px; padding:4px 12px; border-radius:20px;
-  border:0.5px solid var(--border2); background:transparent;
-  color:var(--text2); cursor:pointer; font-family:inherit;
-  transition:background .12s, color .12s;
-}
+/* Pill */
+.pill { font-size:11px; padding:4px 12px; border-radius:20px; border:0.5px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer; font-family:inherit; transition:background .12s,color .12s; }
 .pill:hover { background:var(--surf2); }
-.pill.on    { background:var(--text); color:var(--bg); border-color:var(--text); }
+.pill.on { background:var(--text); color:var(--bg); border-color:var(--text); }
 .pill.reload { display:flex; align-items:center; gap:5px; }
 .spin.go { animation:spin .7s linear infinite; display:inline-block; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* ── Summary strip ── */
+/* Summary */
 .strip { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
 @media(max-width:500px){ .strip { grid-template-columns:repeat(2,1fr); } }
 .sc { background:var(--surf2); border-radius:var(--r-md); padding:10px 12px; }
@@ -92,168 +62,116 @@ body {
 .sc.inc .vl { color:var(--green); }
 .sc.exp .vl { color:var(--red); }
 
-/* ── Panel ── */
-.panel {
-  background:var(--surface); border:0.5px solid var(--border);
-  border-radius:var(--r-lg); padding:10px 14px; margin-bottom:10px;
-}
+/* Panel */
+.panel { background:var(--surface); border:0.5px solid var(--border); border-radius:var(--r-lg); padding:10px 14px; margin-bottom:10px; }
 .ptitle { font-size:11px; font-weight:500; color:var(--text3); margin-bottom:8px; letter-spacing:.03em; text-transform:uppercase; }
 
-/* ── Category row ── */
+/* Category filter */
 .cat-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
-.cat-chip {
-  font-size:11px; padding:3px 10px; border-radius:20px;
-  border:0.5px solid var(--border2); cursor:pointer;
-  display:flex; align-items:center; gap:4px;
-  font-family:inherit; transition:opacity .12s;
-  background:transparent; color:var(--text2);
-}
+.cat-chip { font-size:11px; padding:3px 10px; border-radius:20px; border:0.5px solid var(--border2); cursor:pointer; display:flex; align-items:center; gap:4px; font-family:inherit; transition:opacity .12s; background:transparent; color:var(--text2); }
 .cat-chip.on { font-weight:500; }
 .cat-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-
-/* edit icon */
-.cat-edit {
-  font-size:10px; opacity:0; margin-left:2px; cursor:pointer;
-  transition:opacity .12s; color:inherit;
-}
+.cat-edit { font-size:10px; opacity:0; margin-left:2px; cursor:pointer; transition:opacity .12s; color:inherit; }
 .cat-chip:hover .cat-edit { opacity:.7; }
-
-/* add-cat button */
-.add-cat-btn {
-  font-size:11px; padding:3px 10px; border-radius:20px;
-  border:0.5px dashed var(--border2); background:transparent;
-  color:var(--text3); cursor:pointer; font-family:inherit;
-}
+.add-cat-btn { font-size:11px; padding:3px 10px; border-radius:20px; border:0.5px dashed var(--border2); background:transparent; color:var(--text3); cursor:pointer; font-family:inherit; }
 .add-cat-btn:hover { border-color:var(--text2); color:var(--text2); }
 
-/* ── Charts row ── */
+/* Charts */
 .charts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
 @media(max-width:540px){ .charts { grid-template-columns:1fr; } }
 .chart-h { position:relative; width:100%; height:180px; }
-.legend  { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
-.leg-i   { font-size:10px; color:var(--text2); display:flex; align-items:center; gap:3px; }
-.leg-sq  { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+.legend { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+.leg-i { font-size:10px; color:var(--text2); display:flex; align-items:center; gap:3px; }
+.leg-sq { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
 
-/* ── Bar list ── */
-.bar-r   { display:flex; align-items:center; gap:7px; margin-bottom:7px; }
+/* Bar */
+.bar-r { display:flex; align-items:center; gap:7px; margin-bottom:7px; }
 .bar-lbl { font-size:11px; color:var(--text2); width:64px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.bar-tr  { flex:1; height:6px; background:var(--surf2); border-radius:3px; overflow:hidden; }
-.bar-fl  { height:100%; border-radius:3px; transition:width .4s ease; }
+.bar-tr { flex:1; height:6px; background:var(--surf2); border-radius:3px; overflow:hidden; }
+.bar-fl { height:100%; border-radius:3px; transition:width .4s ease; }
 .bar-amt { font-size:11px; font-weight:500; min-width:68px; text-align:right; }
 
-/* ── Table ── */
+/* Table */
 .tbl-wrap { overflow-x:auto; max-height:420px; overflow-y:auto; }
 table { width:100%; border-collapse:collapse; font-size:12px; }
-th {
-  font-size:10px; font-weight:500; color:var(--text3);
-  text-align:left; padding:5px 7px;
-  border-bottom:0.5px solid var(--border);
-  position:sticky; top:0; background:var(--surface); z-index:1;
-}
+th { font-size:10px; font-weight:500; color:var(--text3); text-align:left; padding:5px 7px; border-bottom:0.5px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:1; }
 th.r { text-align:right; }
 td { padding:7px 7px; border-bottom:0.5px solid var(--border); vertical-align:middle; }
 td.r { text-align:right; font-variant-numeric:tabular-nums; }
 tr:last-child td { border-bottom:none; }
 tr:hover td { background:var(--surf2); }
 
-/* ── Badge ── */
+/* Badge */
 .bdg { display:inline-block; font-size:9px; padding:1px 7px; border-radius:20px; font-weight:500; }
 .bdg-i { background:var(--green-bg); color:var(--green-dk); }
-.bdg-e { background:var(--red-bg);   color:var(--red-dk);   }
+.bdg-e { background:var(--red-bg);   color:var(--red-dk); }
 
-/* ── State ── */
+/* State */
 .state { text-align:center; padding:2rem; font-size:13px; color:var(--text3); }
 .nodata { font-size:12px; color:var(--text3); text-align:center; padding:1.5rem; }
-.del-btn {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:22px; height:22px; border-radius:6px;
-  border:none; background:transparent;
-  color:var(--text3); cursor:pointer; opacity:0;
-  transition:opacity .15s, background .15s, color .15s;
-}
+
+/* Del btn */
+.del-btn { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:6px; border:none; background:transparent; color:var(--text3); cursor:pointer; opacity:0; transition:opacity .15s,background .15s,color .15s; }
 tr:hover .del-btn { opacity:1; }
 .del-btn:hover { background:var(--red-bg); color:var(--red); }
+
+/* Inline edit */
 .edit-cell { cursor:pointer; border-radius:4px; padding:2px 4px; transition:background .12s; }
 .edit-cell:hover { background:var(--surf2); }
-.edit-input {
-  font-size:12px; font-family:inherit; color:var(--text);
-  background:var(--surf2); border:0.5px solid var(--border2);
-  border-radius:4px; padding:2px 6px; width:100%; outline:none;
-}
+.edit-input { font-size:12px; font-family:inherit; color:var(--text); background:var(--surf2); border:0.5px solid var(--border2); border-radius:4px; padding:2px 6px; width:100%; outline:none; }
 .edit-input:focus { border-color:var(--text2); }
-.edit-select {
-  font-size:12px; font-family:inherit; color:var(--text);
-  background:var(--surf2); border:0.5px solid var(--border2);
-  border-radius:4px; padding:2px 4px; outline:none; cursor:pointer;
-}
+.edit-select { font-size:12px; font-family:inherit; color:var(--text); background:var(--surf2); border:0.5px solid var(--border2); border-radius:4px; padding:2px 4px; outline:none; cursor:pointer; }
 
-/* ── Modal overlay ── */
-.modal-bg {
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,.45); z-index:100;
-  align-items:center; justify-content:center;
-}
+/* Saving indicator */
+.saving { font-size:10px; color:var(--text3); margin-left:6px; }
+
+/* Modal */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:100; align-items:center; justify-content:center; }
 .modal-bg.open { display:flex; }
-.modal {
-  background:var(--surface); border-radius:12px;
-  padding:20px 22px; width:280px; box-shadow:0 8px 32px rgba(0,0,0,.2);
-}
+.modal { background:var(--surface); border-radius:12px; padding:20px 22px; width:280px; box-shadow:0 8px 32px rgba(0,0,0,.2); }
 .modal h3 { font-size:14px; font-weight:500; margin-bottom:14px; }
 .modal label { font-size:11px; color:var(--text2); display:block; margin-bottom:4px; }
-.modal input[type=text] {
-  width:100%; font-size:13px; padding:7px 10px;
-  border:0.5px solid var(--border2); border-radius:var(--r-md);
-  background:var(--surf2); color:var(--text); font-family:inherit;
-  outline:none; margin-bottom:10px;
-}
+.modal input[type=text] { width:100%; font-size:13px; padding:7px 10px; border:0.5px solid var(--border2); border-radius:var(--r-md); background:var(--surf2); color:var(--text); font-family:inherit; outline:none; margin-bottom:10px; }
 .modal input[type=text]:focus { border-color:var(--text2); }
 .color-row { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
-.color-swatch {
-  width:26px; height:26px; border-radius:50%; cursor:pointer;
-  border:2px solid transparent; transition:transform .12s;
-  flex-shrink:0;
-}
+.color-swatch { width:26px; height:26px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:transform .12s; flex-shrink:0; }
 .color-swatch:hover { transform:scale(1.15); }
 .color-swatch.sel { border-color:var(--text); transform:scale(1.1); }
-/* custom color picker */
 .custom-color { display:flex; align-items:center; gap:6px; margin-bottom:14px; }
 .custom-color input[type=color] { width:32px; height:28px; border:none; cursor:pointer; background:none; padding:0; border-radius:4px; }
 .custom-color span { font-size:11px; color:var(--text2); }
 .modal-btns { display:flex; gap:8px; justify-content:flex-end; }
 .btn-cancel { font-size:12px; padding:6px 14px; border-radius:20px; border:0.5px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer; font-family:inherit; }
-.btn-save   { font-size:12px; padding:6px 14px; border-radius:20px; border:none; background:var(--text); color:var(--bg); cursor:pointer; font-family:inherit; }
-.btn-del    { font-size:12px; padding:6px 14px; border-radius:20px; border:0.5px solid var(--red); background:transparent; color:var(--red); cursor:pointer; font-family:inherit; margin-right:auto; }
+.btn-save { font-size:12px; padding:6px 14px; border-radius:20px; border:none; background:var(--text); color:var(--bg); cursor:pointer; font-family:inherit; }
+.btn-del { font-size:12px; padding:6px 14px; border-radius:20px; border:0.5px solid var(--red); background:transparent; color:var(--red); cursor:pointer; font-family:inherit; margin-right:auto; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- Header -->
   <div class="hdr">
-    <h1>สรุปรายรับรายจ่าย | <strong id="ownerName" style="color:#1D9E75" onclick="editName()" title="คลิกเพื่อแก้ไขชื่อ" style="cursor:pointer">บอย</strong></h1>
+    <h1>สรุปรายรับรายจ่าย | <strong id="ownerName" style="color:#1D9E75;cursor:pointer" onclick="editName()" title="คลิกเพื่อแก้ไขชื่อ">บอย</strong></h1>
     <div class="hdr-r">
       <div style="display:flex;gap:5px;flex-wrap:wrap" id="monthSel"></div>
       <button class="pill" onclick="openAddRow()">+ เพิ่มรายการ</button>
+      <button class="pill reload" onclick="loadData()">
         <span id="spinIcon">↻</span> รีเฟรช
       </button>
     </div>
   </div>
 
-  <!-- Summary strip -->
   <div class="strip">
     <div class="sc inc"><div class="lb">รายรับ</div><div class="vl" id="totalIncome">฿—</div></div>
     <div class="sc exp"><div class="lb">รายจ่าย</div><div class="vl" id="totalExpense">฿—</div></div>
-    <div class="sc"    ><div class="lb">คงเหลือ</div><div class="vl" id="totalNet">฿—</div></div>
-    <div class="sc"    ><div class="lb">รายการ</div><div class="vl" id="totalCount">—</div></div>
+    <div class="sc"><div class="lb">คงเหลือ</div><div class="vl" id="totalNet">฿—</div></div>
+    <div class="sc"><div class="lb">รายการ</div><div class="vl" id="totalCount">—</div></div>
   </div>
 
-  <!-- Category filter -->
   <div class="panel">
     <div class="ptitle">หมวดหมู่</div>
     <div class="cat-row" id="catFilter"></div>
   </div>
 
-  <!-- Charts -->
   <div class="charts">
     <div class="panel">
       <div class="ptitle">สัดส่วนรายจ่าย</div>
@@ -266,16 +184,15 @@ tr:hover .del-btn { opacity:1; }
     </div>
   </div>
 
-  <!-- Table -->
   <div class="panel">
     <div class="ptitle">รายการทั้งหมด</div>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
-           <th>วันที่</th><th>รายการ</th><th>หมวดหมู่</th>
-           <th class="r">รายรับ</th><th class="r">รายจ่าย</th><th></th>
+          <th>วันที่</th><th>รายการ</th><th>หมวดหมู่</th>
+          <th class="r">รายรับ</th><th class="r">รายจ่าย</th><th></th>
         </tr></thead>
-        <tbody id="txTable"><tr><td colspan="5" class="state">กำลังโหลด...</td></tr></tbody>
+        <tbody id="txTable"><tr><td colspan="6" class="state">กำลังโหลด...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -294,12 +211,8 @@ tr:hover .del-btn { opacity:1; }
     <select id="arCat" style="width:100%;font-size:13px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:6px;background:var(--surf2);color:var(--text);font-family:inherit;outline:none;margin-bottom:10px;cursor:pointer;"></select>
     <label>ประเภท</label>
     <div style="display:flex;gap:8px;margin-bottom:10px;">
-      <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text);cursor:pointer">
-        <input type="radio" name="arType" value="expense" checked> รายจ่าย
-      </label>
-      <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text);cursor:pointer">
-        <input type="radio" name="arType" value="income"> รายรับ
-      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text);cursor:pointer"><input type="radio" name="arType" value="expense" checked> รายจ่าย</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text);cursor:pointer"><input type="radio" name="arType" value="income"> รายรับ</label>
     </div>
     <label>จำนวนเงิน (฿)</label>
     <input type="number" id="arAmount" placeholder="0" style="width:100%;font-size:13px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:6px;background:var(--surf2);color:var(--text);font-family:inherit;outline:none;margin-bottom:14px;">
@@ -331,7 +244,9 @@ tr:hover .del-btn { opacity:1; }
 </div>
 
 <script>
-/* ════════════════════ PALETTE ════════════════════ */
+/* ══════════════════════════════════════════════════
+   PALETTE
+   ══════════════════════════════════════════════════ */
 let CAT_COLORS = {
   'อาหาร':    { hex:'#1D9E75', light:'#E1F5EE', dark:'#0F6E56' },
   'เดินทาง':  { hex:'#378ADD', light:'#E6F1FB', dark:'#185FA5' },
@@ -340,78 +255,78 @@ let CAT_COLORS = {
   'รายได้':   { hex:'#639922', light:'#EAF3DE', dark:'#3B6D11' },
   'อื่นๆ':    { hex:'#7F77DD', light:'#EEEDFE', dark:'#534AB7' },
 };
-
-const PRESET_HEX = [
-  '#1D9E75','#378ADD','#D85A30','#EF9F27','#639922','#7F77DD',
-  '#E05C8A','#20A8C3','#C97B2A','#6BAF3C','#9B59B6','#E74C3C',
-  '#16A085','#D35400','#2980B9','#8E44AD','#27AE60','#F39C12',
-];
-
-const EXTRA = [
-  '#E05C8A','#20A8C3','#C97B2A','#6BAF3C','#9B59B6','#E74C3C','#16A085','#D35400',
-];
+const PRESET_HEX = ['#1D9E75','#378ADD','#D85A30','#EF9F27','#639922','#7F77DD','#E05C8A','#20A8C3','#C97B2A','#6BAF3C','#9B59B6','#E74C3C','#16A085','#D35400','#2980B9','#8E44AD','#27AE60','#F39C12'];
+const EXTRA = ['#E05C8A','#20A8C3','#C97B2A','#6BAF3C','#9B59B6','#E74C3C','#16A085','#D35400'];
 
 function hexToLight(hex) {
-  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
-  // ผสมกับขาว 85% ให้ได้สีพื้นอ่อนสม่ำเสมอทุกหมวด
-  const mix = v => Math.round(v * 0.15 + 255 * 0.85);
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const mix = v => Math.round(v*0.15+255*0.85);
   return `rgb(${mix(r)},${mix(g)},${mix(b)})`;
 }
 function hexToDark(hex) {
-  // darken by ~30%
-  const r=Math.round(parseInt(hex.slice(1,3),16)*.6);
-  const g=Math.round(parseInt(hex.slice(3,5),16)*.6);
-  const b=Math.round(parseInt(hex.slice(5,7),16)*.6);
-  return `rgb(${r},${g},${b})`;
+  return `rgb(${Math.round(parseInt(hex.slice(1,3),16)*.6)},${Math.round(parseInt(hex.slice(3,5),16)*.6)},${Math.round(parseInt(hex.slice(5,7),16)*.6)})`;
 }
-function colorFromHex(hex) {
-  return { hex, light: hexToLight(hex), dark: hexToDark(hex) };
-}
-
+function colorFromHex(hex) { return { hex, light:hexToLight(hex), dark:hexToDark(hex) }; }
 function getOrCreate(cat) {
   if (CAT_COLORS[cat]) return CAT_COLORS[cat];
-  const idx = Object.keys(CAT_COLORS).length % EXTRA.length;
-  CAT_COLORS[cat] = colorFromHex(EXTRA[idx]);
+  CAT_COLORS[cat] = colorFromHex(EXTRA[Object.keys(CAT_COLORS).length % EXTRA.length]);
   return CAT_COLORS[cat];
 }
 function getColor(cat) { return getOrCreate(cat); }
-
-/* save/load palette from localStorage */
-function savePalette() {
-  try { localStorage.setItem('cat_colors', JSON.stringify(CAT_COLORS)); } catch(e){}
-}
-function loadPalette() {
-  try {
-    const s = localStorage.getItem('cat_colors');
-    if (s) CAT_COLORS = { ...CAT_COLORS, ...JSON.parse(s) };
-  } catch(e){}
-}
+function savePalette() { try { localStorage.setItem('cat_colors', JSON.stringify(CAT_COLORS)); } catch(e){} }
+function loadPalette() { try { const s=localStorage.getItem('cat_colors'); if(s) CAT_COLORS={...CAT_COLORS,...JSON.parse(s)}; } catch(e){} }
 loadPalette();
 
-/* ════════════════════ STATE ════════════════════ */
-let allData     = [];
-let activeCats  = new Set(Object.keys(CAT_COLORS));
-let activeMonth = 'all';
-let pieChart    = null;
-let editingCat  = null; // null = adding new
+/* ══════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════ */
+let allData    = [];
+let activeCats = new Set(Object.keys(CAT_COLORS));
+let activeMonth= 'all';
+let pieChart   = null;
+let editingCat = null;
 
-/* ════════════════════ DATE ════════════════════ */
-function parseDateTH(str) {
-  if (!str) return null;
-  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(str.trim())) {
-    const [d,m,y] = str.trim().split('/');
-    let yr = parseInt(y);
-    if (yr > 2400) yr -= 543;
-    return new Date(`${yr}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);
+/* ══════════════════════════════════════════════════
+   API — ใช้ await แทน no-cors เพื่อให้รู้ผลจริง
+   ══════════════════════════════════════════════════ */
+async function api(payload) {
+  try {
+    // ใช้ no-cors เพราะ Apps Script ไม่ส่ง CORS header กลับมา
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode:   'no-cors',
+      body:   JSON.stringify(payload)
+    });
+    return true;
+  } catch(e) {
+    console.error('API error:', e);
+    return false;
   }
-  if (/^\d{4}-\d{2}-\d{2}/.test(str)) return new Date(str);
-  if (/^\d{4,5}$/.test(String(str).trim())) {
-    return new Date((parseInt(str) - 25569) * 86400000);
-  }
-  return new Date(str);
 }
 
-/* ════════════════════ FETCH ════════════════════ */
+/* ══════════════════════════════════════════════════
+   DATE PARSER
+   ══════════════════════════════════════════════════ */
+function parseDateTH(str) {
+  if (!str) return null;
+  const s = String(str).trim();
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s + (s.length === 10 ? 'T00:00:00+07:00' : ''));
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}/.test(s)) {
+    const parts = s.split(' ');
+    const [d,m,y] = parts[0].split('/');
+    let yr = parseInt(y);
+    if (yr > 2400) yr -= 543;
+    const time = parts[1] || '00:00:00';
+    return new Date(`${yr}-${m.padStart(2,'0')}-${d.padStart(2,'0')}T${time}+07:00`);
+  }
+  if (/^\d{4,5}$/.test(s)) return new Date((parseInt(s)-25569)*86400000);
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+/* ══════════════════════════════════════════════════
+   LOAD DATA — คอลัมน์ A=ID, B=วันที่, C=รายการ, D=หมวด, E=รายรับ, F=รายจ่าย
+   ══════════════════════════════════════════════════ */
 async function loadData() {
   const spin = document.getElementById('spinIcon');
   spin.classList.add('go');
@@ -421,34 +336,47 @@ async function loadData() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const json = await res.json();
     const rows = (json.values || []).slice(1);
+
     allData = rows
-      .filter(r => r.length >= 5)
-      .map(r => {
-        const pd = parseDateTH(r[0]);
-        return {
-          date:     pd ? pd.toISOString().slice(0,10) : '',
-          item:     r[1] || '',
-          category: r[2] || 'อื่นๆ',
-          income:   parseFloat((r[3]+'').replace(/,/g,'')) || 0,
-          expense:  parseFloat((r[4]+'').replace(/,/g,'')) || 0,
-        };
-      })
-      .filter(r => r.date);
+  .filter(r => r.length >= 2)
+  .map(r => {
+    // ตรวจว่า column แรกเป็น ID (UUID) หรือวันที่
+    const firstCol = String(r[0] || '').trim();
+    const isId = firstCol.length > 10 && !firstCol.includes('/') && isNaN(Date.parse(firstCol)) || firstCol.includes('-') && firstCol.split('-').length === 5;
+    
+    // ถ้า column A เป็น UUID → format ใหม่ (A=ID, B=วันที่, C=รายการ...)
+    // ถ้าไม่ใช่ → format เก่า (A=วันที่, B=รายการ...)
+    const hasId = firstCol.length === 36 && firstCol.split('-').length === 5; // UUID format
+    
+    const dateStr = hasId ? r[1] : r[0];
+    const pd = parseDateTH(hasId ? r[1] : r[0]);
+return {
+  id:           hasId ? r[0] : '',
+  date:         pd && !isNaN(pd.getTime()) ? pd.toISOString().slice(0,10) : '',
+  datetimeFull: pd && !isNaN(pd.getTime()) ? pd.toISOString() : '',  // ← เพิ่มบรรทัดนี้
+  item:         (hasId ? r[2] : r[1]) || '',
+  category:     (hasId ? r[3] : r[2]) || 'อื่นๆ',
+  income:       parseFloat(((hasId ? r[4] : r[3])+'').replace(/,/g,'')) || 0,
+  expense:      parseFloat(((hasId ? r[5] : r[4])+'').replace(/,/g,'')) || 0,
+};
+  })
+  .filter(r => r.date); // กรองแถวที่ parse วันที่ไม่ได้ออก
 
     allData.forEach(r => getOrCreate(r.category));
     activeCats = new Set(Object.keys(CAT_COLORS));
     render();
   } catch(err) {
     document.getElementById('txTable').innerHTML =
-      `<tr><td colspan="5" class="state">⚠️ โหลดไม่สำเร็จ: ${err.message}</td></tr>`;
+      `<tr><td colspan="6" class="state">⚠️ โหลดไม่สำเร็จ: ${err.message}</td></tr>`;
   } finally {
     spin.classList.remove('go');
   }
 }
 
-/* ════════════════════ HELPERS ════════════════════ */
+/* ══════════════════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════════════════ */
 const fmt = n => '฿' + Math.round(n).toLocaleString('th-TH');
-
 function filtered() {
   return allData.filter(r => {
     const mOk = activeMonth === 'all' || r.date.startsWith(activeMonth);
@@ -461,7 +389,9 @@ function getMonths() {
   return ['all', ...Array.from(s).sort().reverse()];
 }
 
-/* ════════════════════ RENDER ════════════════════ */
+/* ══════════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════════ */
 function render() {
   buildMonths(); buildCatFilter();
   const rows = filtered();
@@ -476,12 +406,9 @@ function buildMonths() {
   const el = document.getElementById('monthSel'); el.innerHTML = '';
   getMonths().forEach(m => {
     const b = document.createElement('button');
-    b.className = 'pill' + (m === activeMonth ? ' on' : '');
-    b.textContent = m === 'all' ? 'ทั้งหมด' : (() => {
-      const d = new Date(m+'-01');
-      return isNaN(d) ? m : d.toLocaleDateString('th-TH',{month:'short',year:'2-digit'});
-    })();
-    b.onclick = () => { activeMonth = m; render(); };
+    b.className = 'pill'+(m===activeMonth?' on':'');
+    b.textContent = m==='all' ? 'ทั้งหมด' : (() => { const d=new Date(m+'-01'); return isNaN(d)?m:d.toLocaleDateString('th-TH',{month:'short',year:'2-digit'}); })();
+    b.onclick = () => { activeMonth=m; render(); };
     el.appendChild(b);
   });
 }
@@ -491,30 +418,20 @@ function buildCatFilter() {
   Object.entries(CAT_COLORS).forEach(([cat, col]) => {
     const on = activeCats.has(cat);
     const chip = document.createElement('button');
-    chip.className = 'cat-chip' + (on ? ' on' : '');
-    chip.style.cssText = on
-      ? `border-color:${col.hex};color:${col.dark};background:${col.light}`
-      : '';
+    chip.className = 'cat-chip'+(on?' on':'');
+    chip.style.cssText = on ? `border-color:${col.hex};color:${col.dark};background:${col.light}` : '';
     chip.innerHTML = `<span class="cat-dot" style="background:${col.hex}"></span>${cat}<span class="cat-edit" title="แก้ไข">✎</span>`;
-
-    // toggle filter
-    chip.onclick = (e) => {
+    chip.onclick = e => {
       if (e.target.classList.contains('cat-edit')) return;
-      if (activeCats.has(cat)) { if (activeCats.size > 1) activeCats.delete(cat); }
+      if (activeCats.has(cat)) { if(activeCats.size>1) activeCats.delete(cat); }
       else activeCats.add(cat);
       render();
     };
-    // edit
-    chip.querySelector('.cat-edit').onclick = (e) => {
-      e.stopPropagation(); openModal(cat);
-    };
+    chip.querySelector('.cat-edit').onclick = e => { e.stopPropagation(); openModal(cat); };
     el.appendChild(chip);
   });
-
-  // add button
   const add = document.createElement('button');
-  add.className = 'add-cat-btn';
-  add.textContent = '+ เพิ่มหมวด';
+  add.className = 'add-cat-btn'; add.textContent = '+ เพิ่มหมวด';
   add.onclick = () => openModal(null);
   el.appendChild(add);
 }
@@ -527,32 +444,24 @@ function buildSummary(rows) {
   document.getElementById('totalExpense').textContent = fmt(exp);
   const netEl = document.getElementById('totalNet');
   netEl.textContent = fmt(net);
-  netEl.style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+  netEl.style.color = net>=0 ? 'var(--green)' : 'var(--red)';
   document.getElementById('totalCount').textContent = rows.length;
 }
 
 function buildPie(catExp) {
-  const cats  = Object.keys(catExp).filter(c => catExp[c] > 0);
+  const cats  = Object.keys(catExp).filter(c=>catExp[c]>0);
   const total = cats.reduce((s,c)=>s+catExp[c],0);
   document.getElementById('pieLegend').innerHTML = cats.map(c => {
     const pct = total ? Math.round(catExp[c]/total*100) : 0;
     return `<span class="leg-i"><span class="leg-sq" style="background:${CAT_COLORS[c].hex}"></span>${c} ${pct}%</span>`;
   }).join('');
-
-  if (pieChart) { pieChart.destroy(); pieChart = null; }
+  if (pieChart) { pieChart.destroy(); pieChart=null; }
   const canvas = document.getElementById('pieChart');
   if (!cats.length) { canvas.parentElement.innerHTML='<div class="nodata">ไม่มีข้อมูล</div>'; return; }
-
   pieChart = new Chart(canvas, {
     type:'doughnut',
-    data:{
-      labels:cats,
-      datasets:[{ data:cats.map(c=>catExp[c]), backgroundColor:cats.map(c=>CAT_COLORS[c].hex), borderWidth:2, borderColor:'#fff' }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.raw)}`}} }
-    }
+    data:{ labels:cats, datasets:[{ data:cats.map(c=>catExp[c]), backgroundColor:cats.map(c=>CAT_COLORS[c].hex), borderWidth:2, borderColor:'#fff' }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${fmt(ctx.raw)}`}} } }
   });
 }
 
@@ -563,296 +472,216 @@ function buildBars(catExp) {
   const max = Math.max(...cats.map(c=>catExp[c]));
   el.innerHTML = cats.map(c => {
     const pct = max ? Math.round(catExp[c]/max*100) : 0;
-    return `<div class="bar-r">
-      <span class="bar-lbl" title="${c}">${c}</span>
-      <div class="bar-tr"><div class="bar-fl" style="width:${pct}%;background:${CAT_COLORS[c].hex}"></div></div>
-      <span class="bar-amt" style="color:${CAT_COLORS[c].hex}">${fmt(catExp[c])}</span>
-    </div>`;
+    return `<div class="bar-r"><span class="bar-lbl" title="${c}">${c}</span><div class="bar-tr"><div class="bar-fl" style="width:${pct}%;background:${CAT_COLORS[c].hex}"></div></div><span class="bar-amt" style="color:${CAT_COLORS[c].hex}">${fmt(catExp[c])}</span></div>`;
   }).join('');
 }
 
 function buildTable(rows) {
   const tbody = document.getElementById('txTable');
   if (!rows.length) { tbody.innerHTML=`<tr><td colspan="6" class="state">ไม่มีรายการ</td></tr>`; return; }
-  tbody.innerHTML = [...rows].sort((a,b)=>b.date.localeCompare(a.date)).map(r => {
+  tbody.innerHTML = [...rows].sort((a,b)=>b.date.localeCompare(a.date)).map((r,si) => {
     const col  = getColor(r.category);
-    const d    = new Date(r.date);
-    const dStr = isNaN(d) ? r.date : d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
-    const tb   = r.income > 0
-      ? `<span class="bdg bdg-i">รายรับ</span>`
-      : `<span class="bdg bdg-e">รายจ่าย</span>`;
-    const cb = `<span class="bdg" style="background:${col.light};color:${col.dark}">${r.category}</span>`;
-    const idx = allData.indexOf(r);
+    const d = new Date(r.datetimeFull || r.date);
+    const dStr = isNaN(d) ? r.date : d.toLocaleString('th-TH', {
+      day:'numeric', month:'short', year:'2-digit',
+      hour:'2-digit', minute:'2-digit', timeZone:'Asia/Bangkok'
+    });
+    const tb   = r.income>0 ? `<span class="bdg bdg-i">รายรับ</span>` : `<span class="bdg bdg-e">รายจ่าย</span>`;
+    const cb   = `<span class="bdg" style="background:${col.light};color:${col.dark}">${r.category}</span>`;
+    const idx  = allData.indexOf(r);
     return `<tr>
-      <td style="color:var(--text2);white-space:nowrap" class="edit-cell" onclick="editCell(this,${idx},'date')">${dStr}</td>
+      <td class="edit-cell" style="color:var(--text2);white-space:nowrap" onclick="editCell(this,${idx},'date')">${dStr}</td>
       <td class="edit-cell" onclick="editCell(this,${idx},'item')">${r.item} ${tb}</td>
       <td class="edit-cell" onclick="editCell(this,${idx},'category')">${cb}</td>
-      <td class="r edit-cell" style="color:var(--green)" onclick="editCell(this,${idx},'income')">${r.income  ? fmt(r.income)  : '—'}</td>
+      <td class="r edit-cell" style="color:var(--green)" onclick="editCell(this,${idx},'income')">${r.income ? fmt(r.income) : '—'}</td>
       <td class="r edit-cell" style="color:var(--red)"   onclick="editCell(this,${idx},'expense')">${r.expense ? fmt(r.expense) : '—'}</td>
-      <td class="r"><button class="del-btn" onclick="deleteRow(${idx})" title="ลบรายการ"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></td>
+      <td class="r"><button class="del-btn" onclick="deleteRow(${idx})" title="ลบ"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></td>
     </tr>`;
   }).join('');
 }
 
-/* ════════════════════ MODAL ════════════════════ */
-let selectedHex = '#1D9E75';
-
-function buildSwatches(currentHex) {
-  const row = document.getElementById('swatchRow');
-  row.innerHTML = '';
-  PRESET_HEX.forEach(hex => {
-    const s = document.createElement('div');
-    s.className = 'color-swatch' + (hex === currentHex ? ' sel' : '');
-    s.style.background = hex;
-    s.onclick = () => {
-      selectedHex = hex;
-      document.getElementById('customColor').value = hex;
-      row.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('sel'));
-      s.classList.add('sel');
-    };
-    row.appendChild(s);
-  });
-  document.getElementById('customColor').value = currentHex;
-  document.getElementById('customColor').oninput = e => {
-    selectedHex = e.target.value;
-    row.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('sel'));
-  };
-}
-
-function openModal(cat) {
-  editingCat = cat;
-  const isEdit = cat !== null;
-  document.getElementById('modalTitle').textContent = isEdit ? `แก้ไข "${cat}"` : 'เพิ่มหมวดหมู่';
-  document.getElementById('modalName').value = isEdit ? cat : '';
-  document.getElementById('modalName').disabled = isEdit; // ห้ามเปลี่ยนชื่อหมวดที่มีข้อมูล
-  document.getElementById('btnDel').style.display = isEdit ? '' : 'none';
-  selectedHex = isEdit ? CAT_COLORS[cat].hex : '#1D9E75';
-  buildSwatches(selectedHex);
-  document.getElementById('modalBg').classList.add('open');
-  if (!isEdit) setTimeout(()=>document.getElementById('modalName').focus(), 50);
-}
-
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('modalBg')) return;
-  document.getElementById('modalBg').classList.remove('open');
-}
-
-function saveCat() {
-  const name = document.getElementById('modalName').value.trim();
-  if (!name) { document.getElementById('modalName').focus(); return; }
-  selectedHex = document.getElementById('customColor').value || selectedHex;
-  const col = colorFromHex(selectedHex);
-
-  if (editingCat && editingCat !== name) {
-    // rename: copy data, delete old
-    delete CAT_COLORS[editingCat];
-  }
-  CAT_COLORS[name] = col;
-  savePalette();
-
-  activeCats = new Set(Object.keys(CAT_COLORS));
-  document.getElementById('modalBg').classList.remove('open');
-  render();
-}
-
-function deleteCat() {
-  if (!editingCat) return;
-  if (!confirm(`ลบหมวด "${editingCat}" ออก? (รายการที่ใช้หมวดนี้จะถูกจัดเป็น "อื่นๆ")`)) return;
-  delete CAT_COLORS[editingCat];
-  savePalette();
-  // re-map data
-  allData.forEach(r => { if (r.category === editingCat) r.category = 'อื่นๆ'; });
-  activeCats = new Set(Object.keys(CAT_COLORS));
-  document.getElementById('modalBg').classList.remove('open');
-  render();
-}
-
-/* close modal on Escape */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('modalBg').classList.remove('open');
-});
-
-function deleteRow(idx) {
+/* ══════════════════════════════════════════════════
+   DELETE ROW — ใช้ ID เป็นตัวระบุแถว
+   ══════════════════════════════════════════════════ */
+async function deleteRow(idx) {
   const r = allData[idx];
   if (!r) return;
   if (!confirm(`ลบ "${r.item || 'รายการนี้'}" ออก?`)) return;
-
-  // บันทึกค่าเดิมก่อนลบ
-  const snapshot = { ...r };
   allData.splice(idx, 1);
   render();
-
-  // ลบใน Sheet
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: JSON.stringify({
-      action:   'delete',
-      date:     snapshot.date,
-      item:     snapshot.item,
-      category: snapshot.category,
-    })
-  }).catch(err => console.error('Delete failed:', err));
+  await api({ action:'delete', id:r.id, date:r.date, item:r.item, category:r.category });
 }
 
+/* ══════════════════════════════════════════════════
+   EDIT CELL — inline edit แล้ว sync ด้วย ID
+   ══════════════════════════════════════════════════ */
 function editCell(td, idx, field) {
   const r = allData[idx];
   if (!r) return;
   let input;
-
   if (field === 'category') {
     input = document.createElement('select');
     input.className = 'edit-select';
     Object.keys(CAT_COLORS).forEach(cat => {
       const op = document.createElement('option');
-      op.value = cat; op.textContent = cat;
-      if (cat === r.category) op.selected = true;
+      op.value=cat; op.textContent=cat;
+      if (cat===r.category) op.selected=true;
       input.appendChild(op);
     });
   } else if (field === 'date') {
+  input = document.createElement('input');
+  input.className='edit-input'; input.type='date';
+  input.value = r.date; // YYYY-MM-DD
+} else {
     input = document.createElement('input');
-    input.className = 'edit-input';
-    input.type = 'date';
-    input.value = r.date;
-  } else {
-    input = document.createElement('input');
-    input.className = 'edit-input';
-    input.type = field === 'income' || field === 'expense' ? 'number' : 'text';
-    input.value = field === 'income' ? r.income : field === 'expense' ? r.expense : r.item;
+    input.className='edit-input';
+    input.type = (field==='income'||field==='expense') ? 'number' : 'text';
+    input.value = field==='income' ? r.income : field==='expense' ? r.expense : r.item;
   }
+  td.innerHTML=''; td.appendChild(input);
+  input.focus(); if(input.select) input.select();
 
-  td.innerHTML = '';
-  td.appendChild(input);
-  input.focus();
-  if (input.select) input.select();
-
-function save() {
+  async function save() {
     const val = input.value.trim();
-
-    // เก็บค่าเดิมไว้ก่อน update
-    const old = { date: r.date, item: r.item, category: r.category };
-
-    if (field === 'date')     { r.date     = val || r.date; }
-    else if (field === 'item')     { r.item     = val || r.item; }
-    else if (field === 'category') { r.category = val; }
-    else if (field === 'income')   { r.income   = parseFloat(val) || 0; if (r.income  > 0) r.expense = 0; }
-    else if (field === 'expense')  { r.expense  = parseFloat(val) || 0; if (r.expense > 0) r.income  = 0; }
-
+    if (field==='date') {
+  // เก็บเวลาเดิมไว้ เปลี่ยนแค่วันที่
+  const oldTime = r.datetime ? r.datetime.slice(11) : '00:00:00';
+  r.date = (val || r.date);
+  r.datetimeFull = val + 'T' + oldTime + '+07:00';
+}
+    else if (field==='item')     r.item     = val || r.item;
+    else if (field==='category') r.category = val;
+    else if (field==='income')   { r.income=parseFloat(val)||0; if(r.income>0) r.expense=0; }
+    else if (field==='expense')  { r.expense=parseFloat(val)||0; if(r.expense>0) r.income=0; }
     render();
-
-    // บันทึกการแก้ไขลง Sheet
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({
-        action:      'update',
-        oldDate:     old.date,
-        oldItem:     old.item,
-        oldCategory: old.category,
-        date:        r.date,
-        item:        r.item,
-        category:    r.category,
-        income:      r.income,
-        expense:     r.expense,
-      })
-    }).catch(err => console.error('Update failed:', err));
+    // sync ไปที่ Sheet ด้วย ID
+    await api({
+      action:'update', id:r.id,
+      date:r.date, item:r.item, category:r.category,
+      income:r.income, expense:r.expense
+    });
   }
-
   input.addEventListener('blur', save);
   input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-    if (e.key === 'Escape') { render(); } // ยกเลิก
+    if (e.key==='Enter') { e.preventDefault(); input.blur(); }
+    if (e.key==='Escape') render();
   });
 }
 
-/* ════════════ ADD ROW ════════════ */
+/* ══════════════════════════════════════════════════
+   ADD ROW
+   ══════════════════════════════════════════════════ */
 function openAddRow() {
-  // เติม dropdown หมวดหมู่
   const sel = document.getElementById('arCat');
-  sel.innerHTML = Object.keys(CAT_COLORS).map(c =>
-    `<option value="${c}">${c}</option>`).join('');
-
-  // default วันที่ = วันนี้
-  document.getElementById('arDate').value = new Date().toISOString().slice(0,10);
-  document.getElementById('arItem').value = '';
-  document.getElementById('arAmount').value = '';
+  sel.innerHTML = Object.keys(CAT_COLORS).map(c=>`<option value="${c}">${c}</option>`).join('');
+  document.getElementById('arDate').value  = new Date().toISOString().slice(0,10);
+  document.getElementById('arItem').value  = '';
+  document.getElementById('arAmount').value= '';
   document.querySelector('input[name=arType][value=expense]').checked = true;
-
   document.getElementById('addRowBg').classList.add('open');
-  setTimeout(() => document.getElementById('arItem').focus(), 50);
+  setTimeout(()=>document.getElementById('arItem').focus(),50);
 }
-
 function closeAddRow(e) {
-  if (e && e.target !== document.getElementById('addRowBg')) return;
+  if (e && e.target!==document.getElementById('addRowBg')) return;
   document.getElementById('addRowBg').classList.remove('open');
 }
-
-function saveAddRow() {
+async function saveAddRow() {
   const date   = document.getElementById('arDate').value;
   const item   = document.getElementById('arItem').value.trim();
   const cat    = document.getElementById('arCat').value;
   const type   = document.querySelector('input[name=arType]:checked').value;
-  const amount = parseFloat(document.getElementById('arAmount').value) || 0;
-
+  const amount = parseFloat(document.getElementById('arAmount').value)||0;
   if (!item)   { document.getElementById('arItem').focus(); return; }
   if (!amount) { document.getElementById('arAmount').focus(); return; }
 
-  const newRow = {
-    date,
-    item,
-    category: cat,
-    income:   type === 'income'  ? amount : 0,
-    expense:  type === 'expense' ? amount : 0,
-  };
+  const newRow = { id:'temp_'+Date.now(), date, item, category:cat,
+    income: type==='income' ? amount:0, expense: type==='expense' ? amount:0 };
 
-  // แสดงผลก่อน แล้วค่อย sync
   allData.push(newRow);
   document.getElementById('addRowBg').classList.remove('open');
   render();
 
-  // บันทึกลง Sheet
-fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: JSON.stringify({ action: 'add', ...newRow })
-  }).catch(err => console.error('Save failed:', err));
+  // ส่งไป Sheet แล้วรับ ID จริงกลับมา
+  // เพราะใช้ no-cors จึงรับ response ไม่ได้ — reload หลัง 2 วินาที
+  await api({ action:'add', date, item, category:cat, income:newRow.income, expense:newRow.expense });
+  setTimeout(loadData, 2000); // โหลดใหม่เพื่อรับ ID จริงจาก Sheet
 }
 
-/* ════════════ EDIT NAME ════════════ */
-function editName() {
-  const el  = document.getElementById('ownerName');
-  const cur = el.textContent;
-  const inp = document.createElement('input');
-  inp.value = cur;
-  inp.style.cssText = 'font-size:17px;font-weight:700;color:#1D9E75;background:transparent;border:none;border-bottom:1.5px solid #1D9E75;outline:none;width:80px;font-family:inherit;';
-  el.replaceWith(inp);
-  inp.focus(); inp.select();
-
-  function done() {
-    const strong = document.createElement('strong');
-    strong.id = 'ownerName';
-    strong.style.color = '#1D9E75';
-    strong.title = 'คลิกเพื่อแก้ไขชื่อ';
-    strong.style.cursor = 'pointer';
-    strong.onclick = editName;
-    strong.textContent = inp.value.trim() || cur;
-    inp.replaceWith(strong);
-    try { localStorage.setItem('owner_name', strong.textContent); } catch(e){}
-  }
-  inp.addEventListener('blur', done);
-  inp.addEventListener('keydown', e => { if (e.key==='Enter') inp.blur(); if (e.key==='Escape') { inp.value=cur; inp.blur(); } });
-}
-
-// โหลดชื่อที่บันทึกไว้
-try {
-  const n = localStorage.getItem('owner_name');
-  if (n) document.addEventListener('DOMContentLoaded', () => {
-    const el = document.getElementById('ownerName');
-    if (el) el.textContent = n;
+/* ══════════════════════════════════════════════════
+   CATEGORY MODAL
+   ══════════════════════════════════════════════════ */
+let selectedHex = '#1D9E75';
+function buildSwatches(currentHex) {
+  const row = document.getElementById('swatchRow'); row.innerHTML='';
+  PRESET_HEX.forEach(hex => {
+    const s = document.createElement('div');
+    s.className='color-swatch'+(hex===currentHex?' sel':''); s.style.background=hex;
+    s.onclick=()=>{ selectedHex=hex; document.getElementById('customColor').value=hex; row.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('sel')); s.classList.add('sel'); };
+    row.appendChild(s);
   });
-} catch(e){}
+  document.getElementById('customColor').value=currentHex;
+  document.getElementById('customColor').oninput=e=>{ selectedHex=e.target.value; row.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('sel')); };
+}
+function openModal(cat) {
+  editingCat=cat; const isEdit=cat!==null;
+  document.getElementById('modalTitle').textContent = isEdit?`แก้ไข "${cat}"`:'เพิ่มหมวดหมู่';
+  document.getElementById('modalName').value   = isEdit?cat:'';
+  document.getElementById('modalName').disabled= isEdit;
+  document.getElementById('btnDel').style.display = isEdit?'':'none';
+  selectedHex = isEdit ? CAT_COLORS[cat].hex : '#1D9E75';
+  buildSwatches(selectedHex);
+  document.getElementById('modalBg').classList.add('open');
+  if (!isEdit) setTimeout(()=>document.getElementById('modalName').focus(),50);
+}
+function closeModal(e) {
+  if (e && e.target!==document.getElementById('modalBg')) return;
+  document.getElementById('modalBg').classList.remove('open');
+}
+function saveCat() {
+  const name = document.getElementById('modalName').value.trim();
+  if (!name) { document.getElementById('modalName').focus(); return; }
+  selectedHex = document.getElementById('customColor').value || selectedHex;
+  if (editingCat && editingCat!==name) delete CAT_COLORS[editingCat];
+  CAT_COLORS[name] = colorFromHex(selectedHex);
+  savePalette();
+  activeCats = new Set(Object.keys(CAT_COLORS));
+  document.getElementById('modalBg').classList.remove('open');
+  render();
+}
+function deleteCat() {
+  if (!editingCat) return;
+  if (!confirm(`ลบหมวด "${editingCat}" ออก?`)) return;
+  delete CAT_COLORS[editingCat];
+  savePalette();
+  allData.forEach(r=>{ if(r.category===editingCat) r.category='อื่นๆ'; });
+  activeCats = new Set(Object.keys(CAT_COLORS));
+  document.getElementById('modalBg').classList.remove('open');
+  render();
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') { document.getElementById('modalBg').classList.remove('open'); document.getElementById('addRowBg').classList.remove('open'); } });
 
-/* ════════════════════ INIT ════════════════════ */
+/* ══════════════════════════════════════════════════
+   EDIT NAME
+   ══════════════════════════════════════════════════ */
+function editName() {
+  const el=document.getElementById('ownerName'), cur=el.textContent;
+  const inp=document.createElement('input');
+  inp.value=cur; inp.style.cssText='font-size:17px;font-weight:700;color:#1D9E75;background:transparent;border:none;border-bottom:1.5px solid #1D9E75;outline:none;width:80px;font-family:inherit;';
+  el.replaceWith(inp); inp.focus(); inp.select();
+  function done() {
+    const strong=document.createElement('strong');
+    strong.id='ownerName'; strong.style.color='#1D9E75'; strong.title='คลิกเพื่อแก้ไขชื่อ'; strong.style.cursor='pointer'; strong.onclick=editName;
+    strong.textContent=inp.value.trim()||cur; inp.replaceWith(strong);
+    try { localStorage.setItem('owner_name',strong.textContent); } catch(e){}
+  }
+  inp.addEventListener('blur',done);
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') inp.blur(); if(e.key==='Escape'){inp.value=cur;inp.blur();} });
+}
+try { const n=localStorage.getItem('owner_name'); if(n) window.addEventListener('load',()=>{ const el=document.getElementById('ownerName'); if(el) el.textContent=n; }); } catch(e){}
+
+/* ══════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════ */
 loadData();
 </script>
 </body>
